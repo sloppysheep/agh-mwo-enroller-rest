@@ -42,4 +42,11 @@ public class ParticipantService {
 		
 	}
 	
+	public Participant update(Participant participant) {
+		Transaction transaction = this.connector.getSession().beginTransaction();
+		connector.getSession().update(participant);
+		transaction.commit();
+		return participant;
+		
+	}
 }
