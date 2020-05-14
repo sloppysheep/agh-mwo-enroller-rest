@@ -70,4 +70,21 @@ public class MeetingRestController {
 		return new ResponseEntity<Collection<Participant>>(meeting.getParticipants(), HttpStatus.OK);
 	}
 	
+	@RequestMapping(value = "/{id}/participants", method = RequestMethod.POST)
+	public ResponseEntity<?> registerParticipant(@PathVariable("id") long id, @RequestBody Participant participant) {
+		Meeting meeting = meetingService.findById(id);
+		if (meeting == null) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
+		for(Participant p : meeting.getParticipants()) {
+			if (p == participant) {
+				return new ResponseEntity(
+						"Unable to create. A participant with login " + participant.getLogin() + " already exist.",
+						HttpStatus.CONFLICT);
+			}
+		}
+		meeting.addParticipant(participant);
+		return new ResponseEntity<Participant>(participant, HttpStatus.CREATED);
+	}
+	
 }
