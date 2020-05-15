@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -24,6 +25,8 @@ public class Participant {
 //	@JoinTable(name = "meeting_participant", joinColumns = { @JoinColumn(name = "participant_login") }, inverseJoinColumns = {
 //			@JoinColumn(name = "meeting_id") })
 //	Set<Meeting> meetings = new HashSet<>();
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "participants")
+	private Set<Meeting> meetings;
 
 	@Id
 	private String login;
