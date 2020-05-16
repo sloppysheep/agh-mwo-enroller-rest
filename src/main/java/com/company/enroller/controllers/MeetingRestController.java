@@ -29,9 +29,14 @@ import com.company.enroller.persistence.ParticipantService;
 
 public class MeetingRestController {
 
+	private MeetingService meetingService;
+	private ParticipantService participantService;
+
 	@Autowired
-	MeetingService meetingService;
-	ParticipantService participantService;	
+	public MeetingRestController(MeetingService meetingService, ParticipantService participantService) {
+		this.meetingService = meetingService;
+		this.participantService = participantService;
+	}
 	
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public ResponseEntity<?> getMeetings() {
@@ -90,11 +95,9 @@ public class MeetingRestController {
 						HttpStatus.CONFLICT);
 			}
 		}
-		meeting.addParticipant(participant);
-		meetingService.update(meeting);
-//		return new ResponseEntity<Collection<Participant>>(meeting.getParticipants(), HttpStatus.CREATED);
-		return new ResponseEntity<Participant>(foundParticipant, HttpStatus.CREATED);
-
+		meeting.addParticipant(foundParticipant);
+		meeting = meetingService.update(meeting);
+		return new ResponseEntity<Collection<Participant>>(meeting.getParticipants(), HttpStatus.OK);
 	}
 	
 	//GOLD
