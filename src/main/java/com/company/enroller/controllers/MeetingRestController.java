@@ -122,7 +122,21 @@ public class MeetingRestController {
 		foundMeeting.setDescription(meeting.getDescription());
 		foundMeeting.setTitle(meeting.getTitle());
 		meeting = meetingService.update(foundMeeting);
-
-		return new ResponseEntity<Meeting>(meeting, HttpStatus.OK);
+		return new ResponseEntity<Meeting>(foundMeeting, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/{id}/{login}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> deleteParticipant(@PathVariable("id") long id, @PathVariable("login") String login)  {
+		Meeting foundMeeting = meetingService.findById(id);
+		Participant foundParticipant = participantService.findByLogin(login);
+		if (foundMeeting == null) {
+			return new ResponseEntity("Meeting with id: " + id + " does not exist", HttpStatus.NOT_FOUND);
+		}
+		if (foundParticipant == null) {
+			return new ResponseEntity("Participant with login: " + login + " does not exist", HttpStatus.NOT_FOUND);
+		}
+		foundMeeting.removeParticipant(foundParticipant);
+		foundMeeting = meetingService.update(foundMeeting);
+		return new ResponseEntity<Collection<Participant>>(foundMeeting.getParticipants(), HttpStatus.OK);
 	}
 }
