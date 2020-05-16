@@ -20,19 +20,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "participant")
 public class Participant {
 	
-//	@JsonIgnore
-//	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-//	@JoinTable(name = "meeting_participant", joinColumns = { @JoinColumn(name = "participant_login") }, inverseJoinColumns = {
-//			@JoinColumn(name = "meeting_id") })
-//	Set<Meeting> meetings = new HashSet<>();
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "participants")
-	private Set<Meeting> meetings;
-
 	@Id
 	private String login;
 
 	@Column
 	private String password;
+	
+	@JsonIgnore
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinTable(name = "meeting_participant", joinColumns = { @JoinColumn(name = "participant_login") }, inverseJoinColumns = {
+			@JoinColumn(name = "meeting_id") })
+	Set<Meeting> meetings = new HashSet<>();
+//	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "participants")
+//	private Set<Meeting> meetings;
 
 	public String getLogin() {
 		return login;
@@ -50,7 +50,7 @@ public class Participant {
 		this.password = password;
 	}
 	
-//	public Collection<Meeting> getMeetings() {
-//		return meetings;
-//	}
+	public Collection<Meeting> getMeetings() {
+		return meetings;
+	}
 }
