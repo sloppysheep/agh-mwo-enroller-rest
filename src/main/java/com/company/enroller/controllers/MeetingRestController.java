@@ -145,12 +145,17 @@ public class MeetingRestController {
 	//PREMIUM
 	
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public ResponseEntity<?> findByString(@RequestParam(value = "find") String toBeFound) {
-		Collection<Meeting> meetings = meetingService.findByTitleOrDescription(toBeFound);
+	public ResponseEntity<?> findByString(@RequestParam(value = "find", required = false) String toBeFound, @RequestParam(value = "participant", required = false) String login) {
+		Collection<Meeting> meetings = meetingService.findByTitleOrDescriptionOrFindByUser(toBeFound, login);
 //		if (meetings.size() == 0) {
 //			return new ResponseEntity(HttpStatus.NOT_FOUND);
 //		}
 		return new ResponseEntity<Collection<Meeting>>(meetings, HttpStatus.OK);
 	}
 	
+//	@RequestMapping(value = "", method = RequestMethod.GET)
+//	public ResponseEntity<?> findByParticipant(@RequestParam(value = "participant") String login) {
+//		Collection<Meeting> meetings = meetingService.findByLogin(login);
+//		return new ResponseEntity<Collection<Meeting>>(meetings, HttpStatus.OK);
+//	}
 }

@@ -49,10 +49,37 @@ public class MeetingService {
 		transaction.commit();
 	}
 	
-	public  Collection<Meeting> findByTitleOrDescription(String stringToFind) {
+	public  Collection<Meeting> findByTitleOrDescriptionOrFindByUser(String stringToFind, String login) {
 		if (stringToFind == null) {stringToFind = "";} // in order to be able to get all meetings
-		Query query = session.createQuery("from Meeting m where m.description like :value or m.title like :value");
-		query.setParameter("value", "%" + stringToFind + "%");
-		return query.list();
+		if (login == null) {login = "";} 
+		// those queries still need to be re-written into one query
+		if (login != "") {
+			Query query = session.createQuery("select distinct m from Meeting m join m.participants p where p.login like :value");
+			query.setParameter("value", "%" + login + "%");
+			return query.list();
+		}
+		else {
+			Query query = session.createQuery("from Meeting m where m.description like :value or m.title like :value");
+			query.setParameter("value", "%" + stringToFind + "%");
+			return query.list();
+		}
+//		Query query = session.createQuery("select distinct m from Meeting m where m.description like :value2 or m.title like :value2 and m in (select m from m join m.participants p where p.login like :value1) order by m.title");
+//		query.setParameter("value1", "%" + login + "%");
+//		query.setParameter("value2", "%" + stringToFind + "%");
+//		return query.list();
 	}
+	
+//	public  Collection<Meeting> findByTitleOrDescription(String stringToFind) {
+//		if (stringToFind == null) {stringToFind = "";} // in order to be able to get all meetings
+//		Query query = session.createQuery("from Meeting m where m.description like :value or m.title like :value");
+//		query.setParameter("value", "%" + stringToFind + "%");
+//		return query.list();
+//	}
+//	
+//	public  Collection<Meeting> findByLogin(String login) {
+//		if (login == null) {login = "";} // in order to be able to get all meetings
+//		Query query = session.createQuery("select m from Meeting m join m.participants p where p.login like :value");
+//		query.setParameter("value", "%" + login + "%");
+//		return query.list();
+//	}
 }
