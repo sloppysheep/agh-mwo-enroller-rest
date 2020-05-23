@@ -1,6 +1,7 @@
 package com.company.enroller.controllers;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RequestMethod;
-
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.company.enroller.model.Meeting;
@@ -38,11 +39,11 @@ public class MeetingRestController {
 		this.participantService = participantService;
 	}
 	
-	@RequestMapping(value = "", method = RequestMethod.GET)
-	public ResponseEntity<?> getMeetings() {
-		Collection<Meeting> meetings = meetingService.getAll();
-		return new ResponseEntity<Collection<Meeting>>(meetings, HttpStatus.OK);
-	}
+//	@RequestMapping(value = "", method = RequestMethod.GET)
+//	public ResponseEntity<?> getMeetings() {
+//		Collection<Meeting> meetings = meetingService.getAll();
+//		return new ResponseEntity<Collection<Meeting>>(meetings, HttpStatus.OK);
+//	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getMeeting(@PathVariable("id") long id) {
@@ -101,6 +102,7 @@ public class MeetingRestController {
 	}
 	
 	//GOLD
+	
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<?> delMeeting(@PathVariable("id") long id) {
 		Meeting foundMeeting = meetingService.findById(id);
@@ -139,4 +141,16 @@ public class MeetingRestController {
 		foundMeeting = meetingService.update(foundMeeting);
 		return new ResponseEntity<Collection<Participant>>(foundMeeting.getParticipants(), HttpStatus.OK);
 	}
+	
+	//PREMIUM
+	
+	@RequestMapping(value = "", method = RequestMethod.GET)
+	public ResponseEntity<?> findByString(@RequestParam(value = "find") String toBeFound) {
+		Collection<Meeting> meetings = meetingService.findByTitleOrDescription(toBeFound);
+//		if (meetings.size() == 0) {
+//			return new ResponseEntity(HttpStatus.NOT_FOUND);
+//		}
+		return new ResponseEntity<Collection<Meeting>>(meetings, HttpStatus.OK);
+	}
+	
 }

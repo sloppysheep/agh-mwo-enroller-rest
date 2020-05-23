@@ -48,4 +48,11 @@ public class MeetingService {
 		session.delete(meeting);
 		transaction.commit();
 	}
+	
+	public  Collection<Meeting> findByTitleOrDescription(String stringToFind) {
+		if (stringToFind == null) {stringToFind = "";} // in order to be able to get all meetings
+		Query query = session.createQuery("from Meeting m where m.description like :value or m.title like :value");
+		query.setParameter("value", "%" + stringToFind + "%");
+		return query.list();
+	}
 }
